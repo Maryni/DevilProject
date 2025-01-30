@@ -41,6 +41,7 @@ namespace Project
             _serverController.OnServerOn +=  () => _loading.ShowField(_serverController.ResponseResult);
             _serverController.OnServerOff += _loading.StopLoading;
             _serverController.OnServerOff += _uiController.ChangeViewLoading;
+            _serverController.OnServerOff += _uiController.StartButtonAnimation;
         }
 
         #endregion private functions

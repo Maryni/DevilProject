@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 namespace Project.UI
@@ -11,25 +13,40 @@ namespace Project.UI
     {
         #region Inspector variables
 
-        [SerializeField] private GameObject _menu;
-        [SerializeField] private GameObject _level;
+        [Header("Main UI"),SerializeField] private GameObject _menu;
         [SerializeField] private GameObject _game;
-        [SerializeField] private GameObject _info;
         [SerializeField] private GameObject _loading;
-        [SerializeField] private GameObject _settings;
-        [SerializeField] private GameObject _onBoarding;
+        [SerializeField] private Transform _menuButton;
+        [Header("Changed"), SerializeField] private List<TMP_Text> _bestScoreList;
+        [SerializeField] private List<TMP_Text> _lastScoreList;
+        [Header("Animation"), SerializeField] private float maxScale;
+        [SerializeField] private float duration;
 
         #endregion Inspector variables
-
+        
         #region public functions
 
         public void ChangeViewMenu() => ChangeView(_menu);
         public void ChangeViewGame() => ChangeView(_game);
-        public void ChangeViewInfo() => ChangeView(_info);
-        public void ChangeViewLevel() => ChangeView(_level);
         public void ChangeViewLoading() => ChangeView(_loading);
-        public void ChangeViewSettings() => ChangeView(_settings);
-        public void ChangeViewOnBoarding() => ChangeView(_onBoarding);
+
+        public void SetBestScore(string value)
+        {
+            foreach (var item in _bestScoreList)
+            {
+                SetText(item, value);
+            }
+        }
+        
+        public void SetCurrentScore(string value)
+        {
+            foreach (var item in _lastScoreList)
+            {
+                SetText(item, value);
+            }
+        }
+
+        public void StartButtonAnimation() => _menuButton.DOScale(new Vector3(maxScale, maxScale, maxScale), duration).SetLoops(-1, LoopType.Yoyo);
 
         #endregion public functions
 

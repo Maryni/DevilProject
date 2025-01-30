@@ -17,6 +17,8 @@ namespace Project
         [SerializeField] private LevelController _levelController;
         [SerializeField] private Loading _loading;
         [SerializeField] private UIController _uiController;
+        [SerializeField] private ServerController _serverController;
+        [SerializeField] private DailyController _dailyController;
 
         #endregion Inspector variables
 
@@ -25,6 +27,7 @@ namespace Project
         private void Start()
         {
             SetActions();
+            _dailyController.StartDailyCheck();
         }
 
         #endregion Unity functions
@@ -33,7 +36,11 @@ namespace Project
 
         private void SetActions()
         {
-            
+            _dailyController.OnDailyCheck += _serverController.GetServerResponse;
+            _serverController.OnServerOn += _loading.StopLoading;
+            _serverController.OnServerOn +=  () => _loading.ShowField(_serverController.ResponseResult);
+            _serverController.OnServerOff += _loading.StopLoading;
+            _serverController.OnServerOff += _uiController.ChangeViewLoading;
         }
 
         #endregion private functions

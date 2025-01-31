@@ -16,9 +16,6 @@ namespace Project.Game
         
         public float CurrentScore { get; private set; }
         public float BestScore { get; private set; }
-
-        
-        //check why after end game wasn't start again
         
         private void Start()
         {
@@ -27,21 +24,21 @@ namespace Project.Game
 
         public void StartGame()
         {
+            CurrentScore = 0;
             _spawner.StartGame();
             _timer.StartTimer();
-            _platform.IsPlaying = true;
+            _platform.StartPlay();
         }
 
         public void StopGame()
         {
             _spawner.StopGame();
             _timer.StopTimer();
-            _platform.IsPlaying = false;
+            _platform.StopPlay();
         }
 
         public void SelectMovementType(int value)
         {
-            Debug.Log("1");
             if (value == 0)
             {
                 _platform.IsDragActive = false;
@@ -68,6 +65,8 @@ namespace Project.Game
         {
             _spawner.OnScoreChange += AddCurrentScore;
             _timer.OnTimerEnd += _spawner.StopGame;
+            _timer.OnTimerEnd += _timer.StopTimer;
+            _timer.OnTimerEnd += _platform.StopPlay;
             _timer.OnTimerEnd += UpdateValues;
             _timer.OnTimerEnd += ()=> OnGameEnd?.Invoke();
         }

@@ -34,6 +34,17 @@ namespace Project.Game
 
         #region public functions
 
+        public int GetAllScore()
+        {
+            var res = 0;
+            foreach (var item in _spawned)
+            {
+                res += item.Score;
+            }
+
+            return res;
+        }
+
         public void GetCollision(SpawnObject spawnObject, ReflectObject reflectObject)
         {
             if (reflectObject.ReflectType == ReflectType.NonReflect)
@@ -44,9 +55,6 @@ namespace Project.Game
             }
             else
             {
-                Vector2 reflectVector = new Vector2(Random.Range(-0.75f,0.75f),3f);
-                spawnObject.Rigidbody2D.linearVelocity = Vector2.zero;
-                spawnObject.Rigidbody2D.AddForce(reflectVector * 100f);
                 if (reflectObject.AddScore)
                 {
                     spawnObject.AddScore();

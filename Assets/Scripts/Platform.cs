@@ -26,9 +26,21 @@ namespace Project.Game
         {
             if (IsDragActive)
             {
-                var newPosition = eventData.position;
-                newPosition.y = transform.localPosition.y;
-                transform.localPosition = newPosition;
+                if (IsDragActive)
+                {
+                    Vector2 localPoint;
+                    RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                        _rectTransform.parent as RectTransform,
+                        eventData.position,
+                        _canvas.worldCamera,
+                        out localPoint
+                    );
+
+                    localPoint -= _offset;
+                    localPoint.y = _rectTransform.localPosition.y; 
+
+                    _rectTransform.localPosition = localPoint;
+                }
             }
         }
 
@@ -66,5 +78,8 @@ namespace Project.Game
                 out _offset
             );
         }
+
+        public void StartPlay() => IsPlaying = true;
+        public void StopPlay() => IsPlaying = false;
     }
 }

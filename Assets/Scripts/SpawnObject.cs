@@ -28,18 +28,19 @@ namespace Project.Game
             UpdateScore();
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
+
+        private void OnCollisionEnter2D(Collision2D other)
         {
-            if (other.GetComponent<ReflectObject>())
+            if (other.gameObject.GetComponent<ReflectObject>())
             {
-                var reflect = other.GetComponent<ReflectObject>();
+                var reflect = other.gameObject.GetComponent<ReflectObject>();
                 if (reflect.ReflectType != ReflectType.None)
                 {
                     _spawner.GetCollision(this, reflect);
                 }
             }
         }
-        
+
         private void UpdateScore() =>_text.text = _score.ToString();
     }
 }

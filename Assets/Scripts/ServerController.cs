@@ -15,20 +15,24 @@ public class ServerController : MonoBehaviour
     private Coroutine responseCoroutine;
     private const string key = "RR";
 
-    #region Unity functions
-
-    private void Start()
-    {
-        ResponseResult = PlayerPrefs.GetString(key);
-    }
-
-    #endregion Unity functions
-
     #region public functions
 
     public void GetServerResponse()
     {
         responseCoroutine ??= StartCoroutine(Response(API));
+    }
+    
+    public void GetShortServerResponse()
+    {
+        ResponseResult = PlayerPrefs.GetString(key);
+        if (!string.IsNullOrEmpty(ResponseResult))
+        {
+            OnServerOn?.Invoke();
+        }
+        else
+        {
+            OnServerOff?.Invoke();
+        }
     }
 
     #endregion public functions

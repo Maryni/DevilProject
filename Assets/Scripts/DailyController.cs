@@ -4,6 +4,7 @@ using UnityEngine.Events;
 public class DailyController : MonoBehaviour
 {
     public UnityAction OnDailyCheck;
+    public UnityAction OnDailyShortCheck;
     public bool IsTest;
     
     private const string key = "DailySave";
@@ -22,6 +23,10 @@ public class DailyController : MonoBehaviour
             OnDailyCheck?.Invoke();
             PlayerPrefs.SetString(key, value);
             PlayerPrefs.Save();
+        }
+        else
+        {
+            OnDailyShortCheck?.Invoke();
         }
     }
 }

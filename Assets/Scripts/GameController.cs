@@ -37,6 +37,7 @@ namespace Project
         private void SetActions()
         {
             _dailyController.OnDailyCheck += _serverController.GetServerResponse;
+            _dailyController.OnDailyShortCheck += _serverController.GetShortServerResponse;
             _serverController.OnServerOn += _loading.StopLoading;
             _serverController.OnServerOn +=  () => _loading.ShowField(_serverController.ResponseResult);
             _serverController.OnServerOff += _loading.StopLoading;

@@ -42,6 +42,8 @@ namespace Project
             _serverController.OnServerOff += _loading.StopLoading;
             _serverController.OnServerOff += _uiController.ChangeViewLoading;
             _serverController.OnServerOff += _uiController.StartButtonAnimation;
+            _levelController.OnGameEnd += () => _uiController.SetBestScore(_levelController.BestScore.ToString());
+            _levelController.OnGameEnd += () => _uiController.SetCurrentScore(_levelController.CurrentScore.ToString());
         }
 
         #endregion private functions

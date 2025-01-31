@@ -17,6 +17,7 @@ namespace Project.UI
         [SerializeField] private GameObject _game;
         [SerializeField] private GameObject _loading;
         [SerializeField] private Transform _menuButton;
+        [SerializeField]
         [Header("Changed"), SerializeField] private List<TMP_Text> _bestScoreList;
         [SerializeField] private List<TMP_Text> _lastScoreList;
         [Header("Animation"), SerializeField] private float maxScale;

@@ -44,6 +44,9 @@ namespace Project
             _serverController.OnServerOff += _uiController.StartButtonAnimation;
             _levelController.OnGameEnd += () => _uiController.SetBestScore(_levelController.BestScore.ToString());
             _levelController.OnGameEnd += () => _uiController.SetCurrentScore(_levelController.CurrentScore.ToString());
+            _levelController.OnGameEnd += _uiController.ChangeViewEndGame;
+            _levelController.OnUIEnableInput += _uiController.ChangeViewGameArrowsOn;
+            _levelController.OnUIDisableInput += _uiController.ChangeViewGameArrowsOff;
         }
 
         #endregion private functions

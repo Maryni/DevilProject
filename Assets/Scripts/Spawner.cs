@@ -44,7 +44,7 @@ namespace Project.Game
             }
             else
             {
-                Vector2 reflectVector = new Vector2(Random.Range(-1.0f,1.0f),3f);
+                Vector2 reflectVector = new Vector2(Random.Range(-0.75f,0.75f),3f);
                 spawnObject.Rigidbody2D.linearVelocity = Vector2.zero;
                 spawnObject.Rigidbody2D.AddForce(reflectVector * 100f);
                 if (reflectObject.AddScore)

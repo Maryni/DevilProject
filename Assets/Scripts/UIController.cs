@@ -17,7 +17,9 @@ namespace Project.UI
         [SerializeField] private GameObject _game;
         [SerializeField] private GameObject _loading;
         [SerializeField] private Transform _menuButton;
-        [SerializeField]
+        [SerializeField] private GameObject _settings;
+        [SerializeField] private GameObject _endgameBackground;
+        [SerializeField] private GameObject _gameArrows;
         [Header("Changed"), SerializeField] private List<TMP_Text> _bestScoreList;
         [SerializeField] private List<TMP_Text> _lastScoreList;
         [Header("Animation"), SerializeField] private float maxScale;
@@ -29,7 +31,11 @@ namespace Project.UI
 
         public void ChangeViewMenu() => ChangeView(_menu);
         public void ChangeViewGame() => ChangeView(_game);
+        public void ChangeViewSettings() => ChangeView(_settings);
+        public void ChangeViewEndGame() => ChangeView(_endgameBackground);
         public void ChangeViewLoading() => ChangeView(_loading);
+        public void ChangeViewGameArrowsOn() => ChangeViewOn(_gameArrows);
+        public void ChangeViewGameArrowsOff() => ChangeViewOff(_gameArrows);
 
         public void SetBestScore(string value)
         {
@@ -55,6 +61,8 @@ namespace Project.UI
 
         private void SetText(TMP_Text item, string value) => item.text = value;
         private void ChangeView(GameObject item) => item.SetActive(!item.activeSelf);
+        private void ChangeViewOn(GameObject item) => item.SetActive(true);
+        private void ChangeViewOff(GameObject item) => item.SetActive(false);
 
         #endregion private functions
     }

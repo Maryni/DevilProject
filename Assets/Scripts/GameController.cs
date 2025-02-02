@@ -19,6 +19,7 @@ namespace Project
         [SerializeField] private UIController _uiController;
         [SerializeField] private ServerController _serverController;
         [SerializeField] private DailyController _dailyController;
+        [SerializeField] private Spawner _spawner;
 
         #endregion Inspector variables
 
@@ -43,6 +44,8 @@ namespace Project
             _serverController.OnServerOff += _loading.StopLoading;
             _serverController.OnServerOff += _uiController.ChangeViewLoading;
             _serverController.OnServerOff += _uiController.StartButtonAnimation;
+            _serverController.OnServerOff += _audioController.PlayMusic;
+            _spawner.OnCollision += _audioController.PlaySound;
             _levelController.OnGameEnd += () => _uiController.SetBestScore(_levelController.BestScore.ToString());
             _levelController.OnGameEnd += () => _uiController.SetCurrentScore(_levelController.CurrentScore.ToString());
             _levelController.OnGameEnd += _uiController.ChangeViewEndGame;

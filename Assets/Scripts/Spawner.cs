@@ -11,16 +11,24 @@ namespace Project.Game
     public class Spawner : MonoBehaviour
     {
         [SerializeField] private SpawnObject _prefab;
+        [SerializeField] private SpawnObject _prefabBonus;
         [SerializeField] private int _countToSpawn;
         [SerializeField] private float _spawnRate;
         [SerializeField] private Transform _spawnPoint;
         [SerializeField] private Transform _parentToSpawn;
-        [SerializeField] private List<SpawnObject> _spawned;
+        [SerializeField] private List<SpawnObject> _spawnedRegular;
+        [SerializeField] private List<SpawnObject> _spawnedBonus;
+        [SerializeField, Range(0f,100f)] private float _bonusChance;
+        [Space, SerializeField] private float _modForceToRandomBounce;
+        [SerializeField, Range(0f,0.75f)] private float _smallGravity;
+        [SerializeField, Range(0.75f,1f)] private float _baseGravity;
 
         private bool isPlaying;
         private Coroutine SpawnerCoroutine;
 
         public UnityAction<int> OnScoreChange;
+        public UnityAction<BonusType> OnBonusGet;
+        public UnityAction OnCollision;
 
         #region Unity functions
 
@@ -34,40 +42,66 @@ namespace Project.Game
 
         #region public functions
 
-        public int GetAllScore()
-        {
-            var res = 0;
-            foreach (var item in _spawned)
-            {
-                res += item.Score;
-            }
-
-            return res;
-        }
-
         public void GetCollision(SpawnObject spawnObject, ReflectObject reflectObject)
         {
-            if (reflectObject.ReflectType == ReflectType.NonReflect)
+            if (reflectObject.ReflectType == ReflectType.Reflect)
+            {
+                if (reflectObject.AddScore)
+                {
+                    if (spawnObject.GetComponent<Bonus>())
+                    {
+                        var bonusType = spawnObject.GetComponent<Bonus>().BonusType;
+                        OnBonusGet(bonusType);
+                        spawnObject.ResetObject();
+                        spawnObject.gameObject.SetActive(false);
+                    }
+                    
+                    GetRandomBounce(spawnObject.Rigidbody2D);
+                    OnCollision?.Invoke();
+                    spawnObject.AddScore();
+                }
+            }
+            else
             {
                 OnScoreChange?.Invoke(spawnObject.Score);
                 spawnObject.ResetObject();
                 spawnObject.gameObject.SetActive(false);
             }
-            else
-            {
-                if (reflectObject.AddScore)
-                {
-                    spawnObject.AddScore();
-                }
-            }
         }
 
         public void StartGame() => isPlaying = true;
-        public void StopGame() => isPlaying = false;
+
+        public void StopGame()
+        {
+            isPlaying = false;
+            HideAll();
+        }
+
+        public void CastSmallGravity()
+        {
+            foreach (var item in _spawnedRegular)
+            {
+                item.Rigidbody2D.gravityScale = _smallGravity;
+            }
+        }
+
+        public void ReturnGravity()
+        {
+            foreach (var item in _spawnedRegular)
+            {
+                item.Rigidbody2D.gravityScale = _baseGravity;
+            }
+        }
 
         #endregion public functions
 
         #region private functions
+
+        private void GetRandomBounce(Rigidbody2D rigidbody2D)
+        {
+            Vector2 randForce = new Vector2(Random.Range(-1f,1f),0f);
+            rigidbody2D.AddForce(randForce * _modForceToRandomBounce, ForceMode2D.Impulse);
+        }
 
         private void BaseSpawn()
         {
@@ -75,28 +109,59 @@ namespace Project.Game
             {
                 Spawn();
             }
+            
+            for (int i = 0; i < _countToSpawn; i++)
+            {
+                Spawn(true);
+            }
         }
         
-        private SpawnObject GetObject()
+        private SpawnObject GetObject(bool isBonus = false)
         {
-            var finded = _spawned.FirstOrDefault(x => !x.gameObject.activeSelf);
-            if (finded == null)
+            if (!isBonus)
             {
-                Spawn();
-                var newObject = _spawned[^1];
-                return newObject;
+                var finded = _spawnedRegular.FirstOrDefault(x => !x.gameObject.activeSelf);
+                if (finded == null)
+                {
+                    Spawn();
+                    var newObject = _spawnedRegular[^1];
+                    return newObject;
+                }
+                return finded;
             }
-            return finded;
+            else
+            {
+                var finded = _spawnedBonus.FirstOrDefault(x => !x.gameObject.activeSelf);
+                if (finded == null)
+                {
+                    Spawn(true);
+                    var newObject = _spawnedBonus[^1];
+                    return newObject;
+                }
+                return finded;
+            }
         }
 
-        private void Spawn()
+        private void Spawn(bool isBonus = false)
         {
             var pointToSpawn = RandomPointInBounds(_spawnPoint.GetComponent<BoxCollider2D>().bounds);
-            var newObject = Instantiate(_prefab, pointToSpawn, Quaternion.identity);
+            SpawnObject newObject;
+            if (!isBonus)
+            {
+                newObject = Instantiate(_prefab, pointToSpawn, Quaternion.identity);
+                _spawnedRegular.Add(newObject);
+            }
+            else
+            {
+                BonusType bonusType = (BonusType)Random.Range(1, 3);
+                newObject = Instantiate(_prefabBonus, pointToSpawn, Quaternion.identity);
+                newObject.GetComponent<Bonus>().BonusType = bonusType;
+                _spawnedBonus.Add(newObject);
+            }
+            
             newObject.transform.SetParent(_parentToSpawn);
             newObject.SetSpawner(this);
             newObject.gameObject.SetActive(false);
-            _spawned.Add(newObject);
         }
         
         private Vector3 RandomPointInBounds(Bounds bounds)
@@ -112,16 +177,28 @@ namespace Project.Game
             {
                 if (isPlaying)
                 {
-                    yield return new WaitForSeconds(_spawnRate);
-                    var newObject = GetObject();
+                    var currentBonus = Random.Range(0f, 100f);
+                    SpawnObject newObject = currentBonus <= _bonusChance ? GetObject(true) : GetObject();
+
                     var pointToSpawn = RandomPointInBounds(_spawnPoint.GetComponent<BoxCollider2D>().bounds);
                     newObject.transform.position = pointToSpawn;
                     newObject.gameObject.SetActive(true);
+                    
+                    yield return new WaitForSeconds(_spawnRate);
                 }
                 else
                 {
                     yield return 0;
                 }
+            }
+        }
+
+        private void HideAll()
+        {
+            foreach (var item in _spawnedRegular)
+            {
+                item.gameObject.SetActive(false);
+                item.AddScore();
             }
         }
 

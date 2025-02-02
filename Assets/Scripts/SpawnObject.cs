@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Project.Game
 {
@@ -33,6 +34,7 @@ namespace Project.Game
         {
             if (other.gameObject.GetComponent<ReflectObject>())
             {
+                //_rigidbody2D.sharedMaterial.bounciness = Random.Range(0.2f, 1f);
                 var reflect = other.gameObject.GetComponent<ReflectObject>();
                 if (reflect.ReflectType != ReflectType.None)
                 {

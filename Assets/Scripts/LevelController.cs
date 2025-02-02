@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -7,12 +8,15 @@ namespace Project.Game
     {
         [SerializeField] private Spawner _spawner;
         [SerializeField] private Timer _timer;
+        [SerializeField] private float _bonusTimer;
         [SerializeField] private int _typeMovement;
         [SerializeField] private Platform _platform;
         
         public UnityAction OnGameEnd;
         public UnityAction OnUIEnableInput;
         public UnityAction OnUIDisableInput;
+
+        private Coroutine BonusCoroutine;
         
         public float CurrentScore { get; private set; }
         public float BestScore { get; private set; }
@@ -20,6 +24,7 @@ namespace Project.Game
         private void Start()
         {
             SetActions();
+            SelectMovementType(_typeMovement);
         }
 
         public void StartGame()
@@ -41,22 +46,19 @@ namespace Project.Game
         {
             if (value == 0)
             {
-                _platform.IsDragActive = false;
-                _platform.IsAccelerometer = true;
+                _platform.EnableAccelerometer();
                 OnUIDisableInput?.Invoke();
             }
 
             if (value == 1)
             {
-                _platform.IsDragActive = true;
-                _platform.IsAccelerometer = false;
+                _platform.EnableDrag();
                 OnUIDisableInput?.Invoke();
             }
 
             if (value == 2)
             {
-                _platform.IsDragActive = false;
-                _platform.IsAccelerometer = false;
+                _platform.EnableArrows();
                 OnUIEnableInput?.Invoke();
             }
         }
@@ -64,6 +66,7 @@ namespace Project.Game
         private void SetActions()
         {
             _spawner.OnScoreChange += AddCurrentScore;
+            _spawner.OnBonusGet += BonusCollect;
             _timer.OnTimerEnd += _spawner.StopGame;
             _timer.OnTimerEnd += _timer.StopTimer;
             _timer.OnTimerEnd += _platform.StopPlay;
@@ -83,6 +86,33 @@ namespace Project.Game
             {
                 BestScore = CurrentScore;
             }
+        }
+
+        private void BonusCollect(BonusType bonusType)
+        {
+            if (bonusType == BonusType.Gravity)
+            {
+                BonusCoroutine ??= StartCoroutine(GravityTimer());
+            }
+
+            if (bonusType == BonusType.BoxSize)
+            {
+                if (_platform.transform.localScale.x < 50)
+                {
+                    _platform.transform.localScale = new Vector3(
+                        _platform.transform.localScale.x + 2,
+                        _platform.transform.localScale.y,
+                        _platform.transform.localScale.z
+                        );
+                }
+            }
+        }
+
+        private IEnumerator GravityTimer()
+        {
+            _spawner.CastSmallGravity();
+            yield return new WaitForSeconds(_bonusTimer);
+            _spawner.ReturnGravity();
         }
     }
 }

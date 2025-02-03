@@ -840,6 +840,7 @@ GameObject:
   - component: {fileID: 98502159}
   - component: {fileID: 98502158}
   - component: {fileID: 98502157}
+  - component: {fileID: 98502160}
   m_Layer: 5
   m_Name: BRight
   m_TagString: Untagged
@@ -910,19 +911,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 98502158}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1051106080}
-        m_TargetAssemblyTypeName: Platform, Assembly-CSharp
-        m_MethodName: MoveRight
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &98502158
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -961,6 +950,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 98502155}
   m_CullTransparentMesh: 1
+--- !u!114 &98502160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 98502155}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fec8042052640a2438c4f3442560b44c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _platform: {fileID: 1051106080}
+  _isRight: 1
 --- !u!1 &170180261
 GameObject:
   m_ObjectHideFlags: 0
@@ -4438,8 +4441,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidbody2D: {fileID: 1051106078}
-  _modeMove: 30
+  _modeMove: 1.5
   _canvas: {fileID: 330549939}
+  _leftLimit: -380
+  _rightLimit: 380
 --- !u!114 &1051106081
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4464,7 +4469,7 @@ BoxCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: ec9c04f94737f5c439a7cb18a610e452, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -4550,6 +4555,7 @@ GameObject:
   - component: {fileID: 1059503687}
   - component: {fileID: 1059503686}
   - component: {fileID: 1059503685}
+  - component: {fileID: 1059503688}
   m_Layer: 5
   m_Name: BLeft
   m_TagString: Untagged
@@ -4620,19 +4626,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1059503686}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1051106080}
-        m_TargetAssemblyTypeName: Platform, Assembly-CSharp
-        m_MethodName: MoveLeft
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1059503686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4671,6 +4665,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1059503683}
   m_CullTransparentMesh: 1
+--- !u!114 &1059503688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1059503683}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fec8042052640a2438c4f3442560b44c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _platform: {fileID: 1051106080}
+  _isRight: 0
 --- !u!1 &1073148188
 GameObject:
   m_ObjectHideFlags: 0
@@ -5491,7 +5499,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _prefab: {fileID: 6441161281277769980, guid: 08209e48407fd9c4d8e3db37af9848fc, type: 3}
   _prefabBonus: {fileID: 6441161281277769980, guid: a74087bcbac04924293f08ca633e7480, type: 3}
-  _countToSpawn: 1
+  _countToSpawn: 5
   _spawnRate: 1
   _spawnPoint: {fileID: 446964534}
   _parentToSpawn: {fileID: 1368698603}

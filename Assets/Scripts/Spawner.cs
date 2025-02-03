@@ -71,10 +71,14 @@ namespace Project.Game
 
         public void StartGame() => isPlaying = true;
 
-        public void StopGame()
+        public void StopGame(bool end = false)
         {
             isPlaying = false;
             HideAll();
+            if (end)
+            {
+                ResetAll();
+            }
         }
 
         public void CastSmallGravity()
@@ -198,8 +202,21 @@ namespace Project.Game
             foreach (var item in _spawnedRegular)
             {
                 item.gameObject.SetActive(false);
-                item.AddScore();
+                item.CollectScore();
             }
+
+            foreach (var item in _spawnedBonus)
+            {
+                item.gameObject.SetActive(false);
+            }
+        }
+
+        private void ResetAll()
+        {
+            foreach (var item in _spawnedRegular)
+            {
+                item.ResetObject();
+            } 
         }
 
         #endregion private functions

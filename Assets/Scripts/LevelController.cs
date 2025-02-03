@@ -67,7 +67,7 @@ namespace Project.Game
         {
             _spawner.OnScoreChange += AddCurrentScore;
             _spawner.OnBonusGet += BonusCollect;
-            _timer.OnTimerEnd += _spawner.StopGame;
+            _timer.OnTimerEnd += () => _spawner.StopGame(true);
             _timer.OnTimerEnd += _timer.StopTimer;
             _timer.OnTimerEnd += _platform.StopPlay;
             _timer.OnTimerEnd += UpdateValues;
